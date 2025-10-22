@@ -6,6 +6,10 @@ const errorHandler=require('./middlewares/errorMiddleware')
 
 const userRoutes=require('./routes/userRoutes')
 const customerRoutes=require('./routes/customerRoutes')
+const brandRoutes=require('./routes/brandRoutes')
+const categoryRoutes=require('./routes/categoryRoutes')
+const storeRoutes=require('./routes/storeRoutes')
+
 
 dotenv.config()
 
@@ -20,6 +24,9 @@ app.get('/',(req,res)=>{
 })
 app.use('/api/users',userRoutes)
 app.use('/api/customers',customerRoutes)
+app.use('/api/brands',brandRoutes)
+app.use('/api/categories',categoryRoutes)
+app.use('/api/stores',storeRoutes)
 
 
 app.use(errorHandler)
