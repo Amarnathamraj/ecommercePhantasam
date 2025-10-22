@@ -21,4 +21,4 @@ const testConnection=async()=>{
     }
 }
 testConnection()
-module.exports={db}
+module.exports=db;

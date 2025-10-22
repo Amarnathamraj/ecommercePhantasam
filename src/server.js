@@ -1,9 +1,7 @@
-const express=require('express')
-const app=express()
-const db=require('./config/db')
-app.get('/',(req,res)=>{
-    res.send('backend running on render')
-})
+
+// const db=require('./config/db')
+const app=require('./app')
+
 const PORT=process.env.PORT||5000
 app.listen(5000,()=>{
     console.log(`server running on ${PORT}`)
