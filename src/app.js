@@ -10,6 +10,8 @@ const brandRoutes=require('./routes/brandRoutes')
 const categoryRoutes=require('./routes/categoryRoutes')
 const storeRoutes=require('./routes/storeRoutes')
 const productRoutes=require('./routes/productRoutes')
+const cartRoutes=require('./routes/cartRoutes')
+
 
 dotenv.config()
 
@@ -28,7 +30,7 @@ app.use('/api/brands',brandRoutes)
 app.use('/api/categories',categoryRoutes)
 app.use('/api/stores',storeRoutes)
 app.use('/api/products',productRoutes)
-
+app.use('/api/carts',cartRoutes)
 
 app.use(errorHandler)
 module.exports=app;
