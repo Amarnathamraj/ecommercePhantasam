@@ -5,6 +5,7 @@ const dotenv=require('dotenv')
 const errorHandler=require('./middlewares/errorMiddleware')
 
 const userRoutes=require('./routes/userRoutes')
+const customerRoutes=require('./routes/customerRoutes')
 
 dotenv.config()
 
@@ -18,8 +19,7 @@ app.get('/',(req,res)=>{
     res.send('server running')
 })
 app.use('/api/users',userRoutes)
-
-
+app.use('/api/customers',customerRoutes)
 
 
 app.use(errorHandler)
