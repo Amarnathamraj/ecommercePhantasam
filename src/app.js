@@ -1,4 +1,5 @@
 const express=require('express')
+const path=require('path')
 const cors=require('cors')
 const morgan=require('morgan')
 const dotenv=require('dotenv')
@@ -11,7 +12,7 @@ const categoryRoutes=require('./routes/categoryRoutes')
 const storeRoutes=require('./routes/storeRoutes')
 const productRoutes=require('./routes/productRoutes')
 const cartRoutes=require('./routes/cartRoutes')
-
+const orderRoutes=require('./routes/orderRoutes')
 
 dotenv.config()
 
@@ -19,6 +20,8 @@ const app=express()
 app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
+
+// app.use(express.static(path.join(__dirname, "../public")));
 
 //routes
 app.get('/',(req,res)=>{
@@ -31,6 +34,7 @@ app.use('/api/categories',categoryRoutes)
 app.use('/api/stores',storeRoutes)
 app.use('/api/products',productRoutes)
 app.use('/api/carts',cartRoutes)
+app.use("/api/orders", orderRoutes);
 
 app.use(errorHandler)
 module.exports=app;

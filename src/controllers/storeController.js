@@ -1,4 +1,5 @@
-const {createStore,getAllStores,getStoreById}=require('../models/storeModel')
+const {createStore,getAllStores,getStoreById,getNearbyStores}=require('../models/storeModel')
+const db=require('../config/db')
 const addStore=async(req,res,next)=>{
     try{
 const {name,code,contact,address,latitude,longitude}=req.body
@@ -43,4 +44,23 @@ const fetchStoreById=async(req,res,next)=>{
         next(err)
     }
 }
-module.exports={addStore,fetchStores,fetchStoreById}
+
+const nearbyStoresController = async (req, res, next) => {
+  try {
+    let { latitude, longitude } = req.query;
+    if (!latitude || !longitude)
+      return res
+        .status(400)
+        .json({ message: "Latitude and longitude are required" });
+
+    latitude = parseFloat(latitude);
+    longitude = parseFloat(longitude);
+
+    const stores = await getNearbyStores(latitude, longitude);
+    res.json(stores);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports={addStore,fetchStores,fetchStoreById,nearbyStoresController}

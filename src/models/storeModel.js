@@ -15,11 +15,33 @@ const getAllStores=async()=>{
     return rows;
 }
 
+
+const getNearbyStores = async (latitude, longitude, radiusKm = 5) => {
+ const query = `
+  SELECT *, 
+  (6371 * ACOS(
+    COS(RADIANS(?)) * COS(RADIANS(CAST(latitude AS DECIMAL(10,7)))) *
+    COS(RADIANS(CAST(longitude AS DECIMAL(10,7))) - RADIANS(?)) +
+    SIN(RADIANS(?)) * SIN(RADIANS(CAST(latitude AS DECIMAL(10,7)))))
+  ) AS distance_km
+  FROM stores
+  HAVING distance_km <= 5
+  ORDER BY distance_km ASC
+`;
+  const [rows] = await db.execute(query, [
+    latitude,
+    longitude,
+    latitude,
+    radiusKm,
+  ]);
+  return rows;
+};
+
 //get store by id
 const getStoreById=async(id)=>{
     const [rows]=await db.query('select *from stores where id=?',[id])
     return rows[0]
 }
 module.exports={
-    createStore,getAllStores,getStoreById
+    createStore,getAllStores,getStoreById,getNearbyStores
 }
