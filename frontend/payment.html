@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Razorpay Payment</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="payment-container">
+    <h1>E-Commerce Store</h1>
+    <p class="subtitle">Complete your order securely using Razorpay</p>
+    <h2>Pay for Your Order</h2>
+
+    <button id="payButton">Pay Now</button>
+</div>
+    <script>
+        const payButton = document.getElementById("payButton");
+
+        payButton.addEventListener("click", async () => {
+            try {
+               
+                const orderResponse = await fetch("http://localhost:5000/api/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYWhlc2hAZ21haWwuY29tIiwiaWF0IjoxNzYxMTkwOTgwLCJleHAiOjE3NjE3OTU3ODB9.028cA0cmClyV_4VTeNdBK4lkCaC3X7aqJLR6IMTlAjY"
+                    },
+                    body: JSON.stringify({
+                        total_amount: 3000,
+                        items: [
+                            { product_id: 1, quantity: 1, price_snapshot: 3000 }
+                        ]
+                    })
+                });
+
+                const orderData = await orderResponse.json();
+                console.log("Order Created:", orderData);
+
+              const options = {
+                    key: "rzp_test_RWNM4DRTawwDLC",
+                    amount: orderData.razorpayOrder.amount,
+                    currency: orderData.razorpayOrder.currency,
+                    name: "E-Commerce Store",
+                    description: "Order Payment",
+                    order_id: orderData.razorpayOrder.id,  
+                    handler: async function (response) {
+                        // verify payment
+                        const verifyResponse = await fetch("http://localhost:5000/api/orders/verify", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                
+                                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYWhlc2hAZ21haWwuY29tIiwiaWF0IjoxNzYxMTkwOTgwLCJleHAiOjE3NjE3OTU3ODB9.028cA0cmClyV_4VTeNdBK4lkCaC3X7aqJLR6IMTlAjY"
+                            },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            })
+                        });
+                        const verifyData = await verifyResponse.json();
+                        alert(verifyData.message);
+                    },
+                };
+
+                const rzp1 = new Razorpay(options); // <--- Correct variable
+                rzp1.open();
+
+
+            } catch (err) {
+                console.error(err);
+                alert("Payment failed to initiate");
+            }
+        });
+    </script>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+
+</html>
